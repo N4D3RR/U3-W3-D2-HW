@@ -11,7 +11,13 @@ const Home = () => {
 
   useEffect(() => {
     fetch("https://api.spaceflightnewsapi.net/v4/articles")
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.ok) {
+          return res.json()
+        } else {
+          throw new Error("Errore")
+        }
+      })
       .then((data: ArticleList) => {
         console.log(data)
 

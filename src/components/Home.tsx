@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 import ArticleCard from "../components/ArticleCard"
 import type { ArticleList } from "../types/ArticleList"
-import { Col, Container, Row } from "react-bootstrap"
+import { Col, Container, Row, Spinner } from "react-bootstrap"
 import type { Article } from "../types/Article"
 
 const Home = () => {
@@ -13,6 +13,8 @@ const Home = () => {
     fetch("https://api.spaceflightnewsapi.net/v4/articles")
       .then((res) => res.json())
       .then((data: ArticleList) => {
+        console.log(data)
+
         setArticles(data.results)
         setLoading(false)
       })
@@ -22,20 +24,25 @@ const Home = () => {
       })
   }, [])
 
-  if (loading) {
-    return <h2 className="text-center mt-5">Loading articles...</h2>
-  }
-
   return (
-    <Container>
-      <Row>
-        {articles.map((article) => (
-          <Col className="my-3" xs={6} md={4} lg={3} key={article.id}>
-            <ArticleCard article={article} />
-          </Col>
-        ))}
-      </Row>
-    </Container>
+    <>
+      <Container>
+        {loading && (
+          <div className="text-center mt-5">
+            <Spinner animation="border" variant="primary" />
+          </div>
+        )}
+        {!loading && (
+          <Row>
+            {articles.map((article) => (
+              <Col className="my-3" xs={6} md={4} lg={3} key={article.id}>
+                <ArticleCard article={article} />
+              </Col>
+            ))}
+          </Row>
+        )}
+      </Container>
+    </>
   )
 }
 
